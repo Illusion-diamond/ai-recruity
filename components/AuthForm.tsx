@@ -94,7 +94,7 @@ const isSigIn = type === "sign-in";
         </Form>
         <p className="text-center">
             {isSigIn ? 'No account yet ? ' : 'Already have an account? '}
-            <Link href={!isSigIn ? '/sign-In' : '/sign-up'} className="text-user-primary ml-1 font-bold">{!isSigIn ? "Sign In": "Sign up"}</Link>
+            <Link href={!isSigIn ? '/sign-in' : '/sign-up'} className="text-user-primary ml-1 font-bold">{!isSigIn ? "Sign in": "Sign up"}</Link>
         </p>
       </div>
     </div>
