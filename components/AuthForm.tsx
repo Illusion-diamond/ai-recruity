@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button"
 import {Form,} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "@/Firebase/client"
+import { signIn, signUp } from "@/lib/actions/aut.action"
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -37,14 +40,41 @@ const AuthForm = ({type}: {type:FormType}) => {
   })
  
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
    try{
       if(type==='sign-up'){
+        const {name, email, password} = values;
+        const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+        const result = await signUp({
+          uid: userCredentials.user.uid,
+          name: name!,
+          email,
+          password
+        })
+
+        if(!result?.success){
+          toast.error(result?.message)
+          return
+        }
         toast.success("Account created successfully")
         router.push('/sign-in')
         console.log('SIGN UP', values)
       }
       else{
+        const {email, password} = values;
+        const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+        const idToken = await userCredentials.user.getIdToken();
+
+        if(!idToken){
+          toast.error("There was an error signing in")
+          return;
+        }
+
+        await signIn({
+          email,
+          idToken
+        })
+
         toast.success("Sign in successfully")
         router.push('/')
         console.log('SIGN IN', values)
@@ -89,7 +119,7 @@ const isSigIn = type === "sign-in";
                     placeholder="Your Password"
                     type="password"
                   />
-                <Button type="submit" className="btn">{ isSigIn ? 'Sign In' : 'Create an Account'}</Button>
+                <Button type="submit" className="btn">{ isSigIn ? 'sign-in' : 'Create an Account'}</Button>
             </form>
         </Form>
         <p className="text-center">
