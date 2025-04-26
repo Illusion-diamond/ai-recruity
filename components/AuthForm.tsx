@@ -77,11 +77,11 @@ const AuthForm = ({type}: {type:FormType}) => {
 
         toast.success("Sign in successfully")
         router.push('/')
-        console.log('SIGN IN', values)
+        console.log('sign-in', values)
       }
    }catch(error){
     console.log(error)
-    toast.error("There was an error: ${error}")
+    toast.error("sign in successfully")
    }
   }
 const isSigIn = type === "sign-in";
@@ -119,7 +119,7 @@ const isSigIn = type === "sign-in";
                     placeholder="Your Password"
                     type="password"
                   />
-                <Button type="submit" className="btn">{ isSigIn ? 'sign-in' : 'Create an Account'}</Button>
+                <Button type="submit" className="btn">{ isSigIn ? 'Sign In' : 'Create an Account'}</Button>
             </form>
         </Form>
         <p className="text-center">
